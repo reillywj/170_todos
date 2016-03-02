@@ -32,9 +32,18 @@ end
 
 # Posting a new list; redirect to '/lists'
 post '/lists' do
-  session[:lists] << {name: params[:list_name], todos: []}
-  session[:success] = 'The list has been created.'
-  redirect '/lists'
+  list_name = params[:list_name].strip
+  case list_name.size
+  when 1..100
+    session[:lists] << {name: list_name, todos: []}
+    session[:success] = 'The list has been created.'
+    redirect '/lists'
+  else
+    session[:error] = 'List name must be between 1 and 100 characters.' if list_name.size <= 0
+    session[:error] = "#{list_name.size} is too many characters. Limit is 100." if list_name.size >100
+    erb :new_list, layout: :layout
+  end
+  
 end
 
 # not_found do
