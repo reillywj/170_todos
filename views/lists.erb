@@ -1,0 +1,15 @@
+<% if @lists.empty? %>
+  <p class="no_list">You have no lists yet.</p>
+<% else %>
+  <ul id="lists">
+    <% @lists.each do |list| %>
+      <li>
+        <a>
+          <h2><%= list[:name] %></h2><p><%= list[:todos].size %></p>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<a href="/lists/new">New List</a>
