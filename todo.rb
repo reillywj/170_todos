@@ -59,8 +59,8 @@ post '/lists' do
 end
 
 # Show single todo list
-get '/list/:number' do
-  @list = session[:lists][params[:number].to_i]
+get '/list/:id' do
+  @list = session[:lists][params[:id].to_i]
   erb :list, layout: :layout
 end
 

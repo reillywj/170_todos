@@ -20,7 +20,7 @@
   </ul>
 <% end %>
 
-<form action="/list/<%= params[:number]%>/new_todo" method='post'>
+<form action="/list/<%= params[:id]%>/new_todo" method='post'>
   <dl>
     <dt>
       <label for='todo'>Enter a new todo item:</label>
@@ -31,6 +31,6 @@
   </dl>
   <fieldset class='actions'>
     <input type='submit' value='Save'>
-    <a href="/list/<%= params[:number]%>">Cancel</a>
+    <a href="/list/<%= params[:id]%>">Cancel</a>
   </fieldset>
 </form>
