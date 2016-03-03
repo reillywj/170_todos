@@ -1,0 +1,32 @@
+<% if @list[:todos].empty? %>
+  <p class="no_list">You have no todos yet.</p>
+<% else %>
+  <ul id="lists">
+    <% @list[:todos].each do |todo| %>
+      <li>
+        <a>
+          <h2><%= todo %></h2>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+
+
+
+
+<form action="/list/<%= params[:number]%>/new_todo" method='post'>
+  <dl>
+    <dt>
+      <label for='todo'>Enter a new todo item:</label>
+    </dt>
+    <dd>
+      <input name='todo' placeholder='Todo' type='text' value="<%= params[:todo] || ''%>">
+    </dd>
+  </dl>
+  <fieldset class='actions'>
+    <input type='submit' value='Save'>
+    <a href="/list/<%= params[:number]%>">Cancel</a>
+  </fieldset>
+</form>

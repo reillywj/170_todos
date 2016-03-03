@@ -58,6 +58,38 @@ post '/lists' do
   end
 end
 
+# Show single todo list
+get '/list/:number' do
+  @list = session[:lists][params[:number].to_i]
+  erb :list, layout: :layout
+end
+
+# Validate new todo to a list; returns a message if validation error
+def todo_validation_error(todo, list)
+  if !(1..50).cover? todo.size
+    'Todo must be between 1 and 50 characters'
+  elsif list[:todos].include? todo
+    "'#{todo}' already exists."
+  end
+end
+
+# Posting a new todo to list; redirect to '/list/:number'
+post '/list/:number/new_todo' do
+  todo = params[:todo].strip
+  list_number = params[:number].to_i
+  @list = session[:lists][list_number]
+
+  error = todo_validation_error(todo, @list)
+  if error
+    session[:error] = error
+    erb :list, layout: :layout
+  else
+    @list[:todos] << todo
+    session[:success] = 'Todo added successfully.'
+    redirect "/list/#{list_number}"
+  end
+end
+
 # not_found do
 #   redirect '/lists'
 # end

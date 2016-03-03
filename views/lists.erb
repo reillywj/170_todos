@@ -2,9 +2,9 @@
   <p class="no_list">You have no lists yet.</p>
 <% else %>
   <ul id="lists">
-    <% @lists.each do |list| %>
+    <% @lists.each_with_index do |list, index| %>
       <li>
-        <a>
+        <a href="/list/<%= index %>">
           <h2><%= list[:name] %></h2><p><%= list[:todos].size %></p>
         </a>
       </li>

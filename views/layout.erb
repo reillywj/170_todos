@@ -9,13 +9,13 @@
   </head>
   <body>
     <header>
-      <h1>Todo Tracker</h1>
+      <a href="/lists"><h1>Todo Tracker</h1></a>
     </header>
 
     <% if session[:success] %>
       <div class='flash success'><%= session.delete :success%></div>
     <% end %>
-    
+
     <% if session[:error] %>
       <div class="flash error"><%= session.delete :error %></div>
     <% end %>
