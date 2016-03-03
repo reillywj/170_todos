@@ -30,20 +30,27 @@ get '/lists/new' do
   erb :new_list, layout: :layout  
 end
 
+# Returns an error message if the name is invalid.
+def list_validation_error(name)
+  if !(1..100).cover? name.size
+    'List name must be between 1 and 100.'
+  elsif session[:lists].any? { |list| list[:name] == name}
+    "'#{name}' already exists."
+  end
+end
+
 # Posting a new list; redirect to '/lists'
 post '/lists' do
   list_name = params[:list_name].strip
-  case list_name.size
-  when 1..100
+  
+  if error = list_validation_error(list_name)
+    session[:error] = error
+    erb :new_list, layout: :layout
+  else
     session[:lists] << {name: list_name, todos: []}
     session[:success] = 'The list has been created.'
     redirect '/lists'
-  else
-    session[:error] = 'List name must be between 1 and 100 characters.' if list_name.size <= 0
-    session[:error] = "#{list_name.size} is too many characters. Limit is 100." if list_name.size >100
-    erb :new_list, layout: :layout
   end
-  
 end
 
 # not_found do
