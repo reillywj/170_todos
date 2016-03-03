@@ -43,7 +43,9 @@ end
 post '/lists' do
   list_name = params[:list_name].strip
   
-  if error = list_validation_error(list_name)
+  error = list_validation_error(list_name)
+  
+  if error
     session[:error] = error
     erb :new_list, layout: :layout
   else
