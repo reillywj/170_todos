@@ -1,3 +1,11 @@
+<section id='todos'>
+  <header>
+    <h2><%= @list[:name] %></h2>
+  </header>
+</section>
+
+<a href="/lists">All Lists</a>
+
 <% if @list[:todos].empty? %>
   <p class="no_list">You have no todos yet.</p>
 <% else %>
@@ -11,10 +19,6 @@
     <% end %>
   </ul>
 <% end %>
-
-
-
-
 
 <form action="/list/<%= params[:number]%>/new_todo" method='post'>
   <dl>
