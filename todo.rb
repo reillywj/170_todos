@@ -95,7 +95,7 @@ end
 get '/list/:id/edit' do
   id = params[:id].to_i
   @list = session[:lists][id]
-  erb :edit, layout: :layout
+  erb :edit_list, layout: :layout
 end
 
 def edit_list_name_validation(list_number, new_name)
@@ -105,7 +105,7 @@ def edit_list_name_validation(list_number, new_name)
   if !(1..100).cover? new_name.size
     "List name must be between 1 and 100."
   elsif other_lists.any? { |list| list[:name] == new_name }
-    "List name already exists."
+    "'#{new_name}' already exists."
   end
     
 end
@@ -120,7 +120,7 @@ post '/list/:id' do
   error = edit_list_name_validation(id, list_name)
   if error
     session[:error] = error
-    erb :edit, layout: :layout
+    erb :edit_list, layout: :layout
 
   else
     if @list[:name].eql? list_name
