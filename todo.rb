@@ -75,7 +75,7 @@ def todo_validation_error(todo, list)
 end
 
 # Posting a new todo to list; redirect to '/list/:number'
-post '/list/:id/new_todo' do
+post '/list/:id/todos' do
   todo = params[:todo].strip
   list_number = params[:id].to_i
   @list = session[:lists][list_number]
