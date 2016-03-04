@@ -5,6 +5,11 @@
 <section id='todos'>
   <header>
     <h2><%= @list[:name] %></h2>
+    <ul>
+      <li>
+        <a href="/list/<%= params[:id]%>/edit" class="edit"></a>
+      </li>
+    </ul>
   </header>
 
   <% if @list[:todos].empty? %>

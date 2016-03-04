@@ -93,8 +93,8 @@ end
 
 # Edit list name
 get '/list/:id/edit' do
-  @list_number = params[:id].to_i
-  @list = session[:lists][@list_number]
+  id = params[:id].to_i
+  @list = session[:lists][id]
   erb :edit, layout: :layout
 end
 
@@ -111,13 +111,13 @@ def edit_list_name_validation(list_number, new_name)
 end
 
 # Update edit to list_name
-post '/list/:id/edit' do
+post '/list/:id' do
   "#{params}\n#{session[:lists]}"
-  @list_number = params[:id].to_i
-  @list = session[:lists][@list_number]
+  list_id = params[:id].to_i
+  @list = session[:lists][list_id]
   list_name = params[:list_name].strip
 
-  error = edit_list_name_validation(@list_number, list_name)
+  error = edit_list_name_validation(list_id, list_name)
   if error
     session[:error] = error
     erb :edit, layout: :layout
@@ -130,7 +130,7 @@ post '/list/:id/edit' do
       session[:success] = 'List updated successfully.'
     end
 
-    redirect '/lists'
+    redirect "/list/#{list_id}"
   end
 end
 
