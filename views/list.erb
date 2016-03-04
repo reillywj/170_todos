@@ -13,10 +13,10 @@
   </header>
 
   <% if @list[:todos].empty? %>
-    <p class="no_list">You have no todos yet.</p>
+    <ul><li><p class="no_list">You have no todos yet.</p></li></ul>
   <% else %>
     <ul>
-      <% @list[:todos].each do |todo| %>
+      <% @list[:todos].each_with_index do |todo, index| %>
         <li>
             <h2><%= todo[:name] %></h2>
         </li>
