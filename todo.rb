@@ -61,7 +61,8 @@ end
 
 # Show single todo list
 get '/list/:id' do
-  @list = session[:lists][params[:id].to_i]
+  @list_id = params[:id].to_i
+  @list = session[:lists][@list_id]
   erb :list, layout: :layout
 end
 
@@ -77,8 +78,8 @@ end
 # Posting a new todo to list; redirect to '/list/:number'
 post '/list/:id/todos' do
   todo = params[:todo].strip
-  list_number = params[:id].to_i
-  @list = session[:lists][list_number]
+  @list_id = params[:id].to_i
+  @list = session[:lists][@list_id]
   error = todo_validation_error(todo, @list)
   if error
     session[:error] = error
@@ -86,14 +87,14 @@ post '/list/:id/todos' do
   else
     @list[:todos] << {name: todo, completed: false}
     session[:success] = 'Todo added successfully.'
-    redirect "/list/#{list_number}"
+    redirect "/list/#{@list_id}"
   end
 end
 
 # Edit list name
 get '/list/:id/edit' do
-  id = params[:id].to_i
-  @list = session[:lists][id]
+  @list_id = params[:id].to_i
+  @list = session[:lists][@list_id]
   erb :edit_list, layout: :layout
 end
 
@@ -112,11 +113,11 @@ end
 # Update edit to list_name
 post '/list/:id' do
   "#{params}\n#{session[:lists]}"
-  id = params[:id].to_i
-  @list = session[:lists][id]
+  @list_id = params[:id].to_i
+  @list = session[:lists][@list_id]
   list_name = params[:list_name].strip
 
-  error = edit_list_name_validation(id, list_name)
+  error = edit_list_name_validation(@list_id, list_name)
   if error
     session[:error] = error
     erb :edit_list, layout: :layout

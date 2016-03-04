@@ -7,7 +7,7 @@
     <h2><%= @list[:name] %></h2>
     <ul>
       <li>
-        <a href="/list/<%= params[:id]%>/edit" class="edit" title='edit list'></a>
+        <a href="/list/<%= @list_id %>/edit" class="edit" title='edit list'></a>
       </li>
     </ul>
   </header>
@@ -25,7 +25,7 @@
   <% end %>
 </section>
 
-<form action="/list/<%= params[:id]%>/todos" method='post'>
+<form action="/list/<%= @list_id%>/todos" method='post'>
   <dl>
     <dt>
       <label for='todo'>Enter a new todo item:</label>
