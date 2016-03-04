@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/content_for'
 require 'sinatra/reloader' if development?
 require 'tilt/erubis'
 
@@ -87,6 +88,49 @@ post '/list/:id/new_todo' do
     @list[:todos] << todo
     session[:success] = 'Todo added successfully.'
     redirect "/list/#{list_number}"
+  end
+end
+
+# Edit list name
+get '/list/:id/edit' do
+  @list_number = params[:id].to_i
+  @list = session[:lists][@list_number]
+  erb :edit, layout: :layout
+end
+
+def edit_list_name_validation(list_number, new_name)
+  other_lists = session[:lists].map.to_a
+  other_lists.delete_at list_number
+
+  if !(1..100).cover? new_name.size
+    "List name must be between 1 and 100."
+  elsif other_lists.any? { |list| list[:name] == new_name }
+    "List name already exists."
+  end
+    
+end
+
+# Update edit to list_name
+post '/list/:id/edit' do
+  "#{params}\n#{session[:lists]}"
+  @list_number = params[:id].to_i
+  @list = session[:lists][@list_number]
+  list_name = params[:list_name].strip
+
+  error = edit_list_name_validation(@list_number, list_name)
+  if error
+    session[:error] = error
+    erb :edit, layout: :layout
+
+  else
+    if @list[:name].eql? list_name
+      session[:success] = 'List name did not change in the update.'
+    else
+      @list[:name] = list_name
+      session[:success] = 'List updated successfully.'
+    end
+
+    redirect '/lists'
   end
 end
 

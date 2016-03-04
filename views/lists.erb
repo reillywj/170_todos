@@ -1,5 +1,5 @@
 <% if @lists.empty? %>
-  <p class="no_list">You have no lists yet.</p>
+  <div class="no_list">You have no lists yet.</div>
 <% else %>
   <ul id="lists">
     <% @lists.each_with_index do |list, index| %>
@@ -7,9 +7,12 @@
         <a href="/list/<%= index %>">
           <h2><%= list[:name] %></h2><p><%= list[:todos].size %></p>
         </a>
+        <a href="/list/<%= index %>/edit">Edit</a>
       </li>
     <% end %>
   </ul>
 <% end %>
 
-<a href="/lists/new">New List</a>
+<% content_for :header_links do %>
+  <a href="/lists/new">New List</a>
+<% end %>

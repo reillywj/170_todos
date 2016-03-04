@@ -1,36 +1,43 @@
+<% content_for :header_links do %>
+  <a href="/lists">All Lists</a>
+<% end %>
+
 <section id='todos'>
   <header>
     <h2><%= @list[:name] %></h2>
   </header>
+
+  <% if @list[:todos].empty? %>
+    <p class="no_list">You have no todos yet.</p>
+  <% else %>
+    <ul>
+      <% @list[:todos].each do |todo| %>
+        <li>
+            <h2><%= todo %></h2>
+        </li>
+      <% end %>
+    </ul>
+    <ul>
+      <li>
+        <form action="/list/<%= params[:id]%>/new_todo" method='post'>
+          <dl>
+            <dt>
+              <label for='todo'>Enter a new todo item:</label>
+            </dt>
+            <dd>
+              <input name='todo' placeholder='Todo' type='text' value="<%= params[:todo] || ''%>">
+            </dd>
+          </dl>
+          <fieldset class='actions'>
+            <input type='submit' value='Save'>
+            <a href="/list/<%= params[:id]%>">Cancel</a>
+          </fieldset>
+        </form>
+      </li>
+    </ul>
+  <% end %>
+
+  
 </section>
 
-<a href="/lists">All Lists</a>
 
-<% if @list[:todos].empty? %>
-  <p class="no_list">You have no todos yet.</p>
-<% else %>
-  <ul id="lists">
-    <% @list[:todos].each do |todo| %>
-      <li>
-        <a>
-          <h2><%= todo %></h2>
-        </a>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-
-<form action="/list/<%= params[:id]%>/new_todo" method='post'>
-  <dl>
-    <dt>
-      <label for='todo'>Enter a new todo item:</label>
-    </dt>
-    <dd>
-      <input name='todo' placeholder='Todo' type='text' value="<%= params[:todo] || ''%>">
-    </dd>
-  </dl>
-  <fieldset class='actions'>
-    <input type='submit' value='Save'>
-    <a href="/list/<%= params[:id]%>">Cancel</a>
-  </fieldset>
-</form>

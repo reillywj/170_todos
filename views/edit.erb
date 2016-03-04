@@ -1,0 +1,14 @@
+<form action='/list/<%= @list_number%>/edit' method='post'>
+  <dl>
+    <dt>
+      <label for='list_name'>Edit list name:</label>
+    </dt>
+    <dd>
+      <input name='list_name' placeholder='List Name' type='text' value="<%= @list[:name]%>">
+    </dd>
+  </dl>
+  <fieldset class='actions'>
+    <input type='submit' value='Save'>
+    <a href="/lists">Cancel</a>
+  </fieldset>
+</form>
