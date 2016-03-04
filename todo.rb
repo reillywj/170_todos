@@ -134,9 +134,10 @@ post '/list/:id' do
   end
 end
 
-get '/list/:id/delete' do
+# Delete a todo list
+post '/list/:id/delete' do
   session[:lists].delete_at params[:id].to_i
-  session[:success] = "List was successfully removed from Lists."
+  session[:success] = "The list has been deleted."
   redirect '/lists'
 end
 

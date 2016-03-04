@@ -8,7 +8,6 @@
     <ul>
       <li>
         <a href="/list/<%= params[:id]%>/edit" class="edit" title='edit list'></a>
-        <a href="/list/<%= params[:id]%>/delete" class='delete' title='delete list'>Delete List</a>
       </li>
     </ul>
   </header>
@@ -23,27 +22,19 @@
         </li>
       <% end %>
     </ul>
-    <ul>
-      <li>
-        <form action="/list/<%= params[:id]%>/new_todo" method='post'>
-          <dl>
-            <dt>
-              <label for='todo'>Enter a new todo item:</label>
-            </dt>
-            <dd>
-              <input name='todo' placeholder='Todo' type='text' value="<%= params[:todo] || ''%>">
-            </dd>
-          </dl>
-          <fieldset class='actions'>
-            <input type='submit' value='Save'>
-            <a href="/list/<%= params[:id]%>">Cancel</a>
-          </fieldset>
-        </form>
-      </li>
-    </ul>
   <% end %>
-
-  
 </section>
 
-
+<form action="/list/<%= params[:id]%>/new_todo" method='post'>
+  <dl>
+    <dt>
+      <label for='todo'>Enter a new todo item:</label>
+    </dt>
+    <dd>
+      <input name='todo' placeholder='Something todo...' type='text' value="<%= params[:todo] || ''%>">
+    </dd>
+  </dl>
+  <fieldset class='actions'>
+    <input type='submit' value='Add'>
+  </fieldset>
+</form>
