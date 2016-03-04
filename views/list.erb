@@ -1,5 +1,5 @@
 <% content_for :header_links do %>
-  <a href="/lists">All Lists</a>
+  <a href="/lists" title="View all lists">All Lists</a>
 <% end %>
 
 <section id='todos'>
@@ -7,7 +7,8 @@
     <h2><%= @list[:name] %></h2>
     <ul>
       <li>
-        <a href="/list/<%= params[:id]%>/edit" class="edit"></a>
+        <a href="/list/<%= params[:id]%>/edit" class="edit" title='edit list'></a>
+        <a href="/list/<%= params[:id]%>/delete" class='delete' title='delete list'>Delete List</a>
       </li>
     </ul>
   </header>

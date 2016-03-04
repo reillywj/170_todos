@@ -134,6 +134,12 @@ post '/list/:id' do
   end
 end
 
+get '/list/:id/delete' do
+  session[:lists].delete_at params[:id].to_i
+  session[:success] = "List was successfully removed from Lists."
+  redirect '/lists'
+end
+
 # not_found do
 #   redirect '/lists'
 # end
