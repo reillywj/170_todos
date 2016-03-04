@@ -18,14 +18,14 @@
     <ul>
       <% @list[:todos].each do |todo| %>
         <li>
-            <h2><%= todo %></h2>
+            <h2><%= todo[:name] %></h2>
         </li>
       <% end %>
     </ul>
   <% end %>
 </section>
 
-<form action="/list/<%= params[:id]%>/new_todo" method='post'>
+<form action="/list/<%= params[:id]%>/todos" method='post'>
   <dl>
     <dt>
       <label for='todo'>Enter a new todo item:</label>

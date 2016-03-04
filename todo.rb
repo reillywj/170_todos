@@ -66,11 +66,11 @@ get '/list/:id' do
 end
 
 # Validate new todo to a list; returns a message if validation error
-def todo_validation_error(todo, list)
-  if !(1..50).cover? todo.size
+def todo_validation_error(input_todo, list)
+  if !(1..50).cover? input_todo.size
     'Todo must be between 1 and 50 characters'
-  elsif list[:todos].include? todo
-    "'#{todo}' already exists."
+  elsif list[:todos].any? { |todo| todo[:name] == input_todo }
+    "'#{input_todo}' already exists."
   end
 end
 
@@ -79,13 +79,12 @@ post '/list/:id/todos' do
   todo = params[:todo].strip
   list_number = params[:id].to_i
   @list = session[:lists][list_number]
-
   error = todo_validation_error(todo, @list)
   if error
     session[:error] = error
     erb :list, layout: :layout
   else
-    @list[:todos] << todo
+    @list[:todos] << {name: todo, completed: false}
     session[:success] = 'Todo added successfully.'
     redirect "/list/#{list_number}"
   end
