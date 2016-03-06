@@ -63,6 +63,10 @@ end
 get '/list/:id' do
   @list_id = params[:id].to_i
   @list = session[:lists][@list_id]
+  completed_todos = Proc.new { |todo| todo[:completed] }
+
+  @completed_todos = @list[:todos].select &completed_todos
+  @incomplete_todos = @list[:todos].reject &completed_todos
   erb :list, layout: :layout
 end
 
@@ -151,22 +155,13 @@ post '/list/:list_id/todo/:todo_id/delete' do
 end
 
 # Set a todo to complete status
-post '/list/:list_id/todo/:todo_id/complete' do
+post '/list/:list_id/todo/:todo_id' do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
   todo = session[:lists][list_id][:todos][todo_id]
-  todo[:completed] = true
-  session[:success] = "#{todo[:name]} has been completed."
-  redirect "/list/#{list_id}"
-end
-
-# Set a todo to incomplete status
-post '/list/:list_id/todo/:todo_id/incomplete' do
-  list_id = params[:list_id].to_i
-  todo_id = params[:todo_id].to_i
-  todo = session[:lists][list_id][:todos][todo_id]
-  todo[:completed] = false
-  session[:success] = "#{todo[:name]} has been set to incomplete."
+  is_completed = params[:completed] == "true"
+  todo[:completed] =  is_completed
+  session[:success] = "#{todo[:name]} has been #{is_completed ? "checked" : "unchecked"}."
   redirect "/list/#{list_id}"
 end
 
