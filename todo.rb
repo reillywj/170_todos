@@ -60,8 +60,8 @@ post '/lists' do
 end
 
 # Show single todo list
-get '/list/:id' do
-  @list_id = params[:id].to_i
+get '/list/:list_id' do
+  @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
   completed_todos = Proc.new { |todo| todo[:completed] }
 
@@ -80,9 +80,9 @@ def todo_validation_error(input_todo, list)
 end
 
 # Posting a new todo to list; redirect to '/list/:number'
-post '/list/:id/todos' do
+post '/list/:list_id/todos' do
   todo = params[:todo].strip
-  @list_id = params[:id].to_i
+  @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
   error = todo_validation_error(todo, @list)
   if error
@@ -96,8 +96,8 @@ post '/list/:id/todos' do
 end
 
 # Edit list name
-get '/list/:id/edit' do
-  @list_id = params[:id].to_i
+get '/list/:list_id/edit' do
+  @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
   erb :edit_list, layout: :layout
 end
@@ -115,9 +115,9 @@ def edit_list_name_validation(list_number, new_name)
 end
 
 # Update edit to list_name
-post '/list/:id' do
+post '/list/:list_id' do
   "#{params}\n#{session[:lists]}"
-  @list_id = params[:id].to_i
+  @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
   list_name = params[:list_name].strip
 
@@ -139,8 +139,8 @@ post '/list/:id' do
 end
 
 # Delete a todo list
-post '/list/:id/delete' do
-  session[:lists].delete_at params[:id].to_i
+post '/list/:list_id/delete' do
+  session[:lists].delete_at params[:list_id].to_i
   session[:success] = "The list has been deleted."
   redirect '/lists'
 end
@@ -154,7 +154,7 @@ post '/list/:list_id/todo/:todo_id/delete' do
   redirect "/list/#{list_id}"
 end
 
-# Set a todo to complete status
+# Toggle completed status of a todo
 post '/list/:list_id/todo/:todo_id' do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
@@ -165,6 +165,7 @@ post '/list/:list_id/todo/:todo_id' do
   redirect "/list/#{list_id}"
 end
 
+# POST to complete all todos in a list
 post '/list/:list_id/complete_all' do
   list_id = params[:list_id].to_i
   session[:lists][list_id][:todos].each do |todo|
