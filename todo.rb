@@ -32,6 +32,10 @@ helpers do
   def todo_class(todo)
     "complete" if todo[:completed]
   end
+
+  def list_path(list_id)
+    "/list/#{list_id}"
+  end
 end
 
 before do
@@ -156,7 +160,7 @@ post '/list/:list_id' do
       session[:success] = 'List updated successfully.'
     end
 
-    redirect "/list/#{id}"
+    redirect "/list/#{@list_id}"
   end
 end
 

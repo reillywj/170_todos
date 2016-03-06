@@ -4,7 +4,7 @@
   <ul id="lists">
     <% @lists.each_with_index do |list, index| %>
       <li class="<%= list_class(list) %>">
-        <a href="/list/<%= index %>">
+        <a href="<%= list_path(index)%>">
           <h2><%= list[:name] %></h2><p><%= todos_remaining(list) %>/<%= total_todos(list) %></p>
         </a>
       </li>
