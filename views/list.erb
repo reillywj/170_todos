@@ -17,7 +17,11 @@
   <% else %>
     <ul>
       <% @list[:todos].each_with_index do |todo, index| %>
-        <li>
+        <li <% if todo[:completed] %> class="complete"<% end %>>
+            <form action="/list/<%= @list_id%>/todo/<%= index %>/<%= todo[:completed] ? "incomplete" : "complete" %> " method="post" class="check">
+              <input type="hidden" name="completed" value=""/>
+              <button type="submit">Complete</button>
+            </form>
             <h3><%= todo[:name] %></h3>
             <form action='/list/<%= @list_id%>/todo/<%= index %>/delete' method='post' class="delete">
               <button type='submit'></button>

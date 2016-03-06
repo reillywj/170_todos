@@ -150,6 +150,26 @@ post '/list/:list_id/todo/:todo_id/delete' do
   redirect "/list/#{list_id}"
 end
 
+# Set a todo to complete status
+post '/list/:list_id/todo/:todo_id/complete' do
+  list_id = params[:list_id].to_i
+  todo_id = params[:todo_id].to_i
+  todo = session[:lists][list_id][:todos][todo_id]
+  todo[:completed] = true
+  session[:success] = "#{todo[:name]} has been completed."
+  redirect "/list/#{list_id}"
+end
+
+# Set a todo to incomplete status
+post '/list/:list_id/todo/:todo_id/incomplete' do
+  list_id = params[:list_id].to_i
+  todo_id = params[:todo_id].to_i
+  todo = session[:lists][list_id][:todos][todo_id]
+  todo[:completed] = false
+  session[:success] = "#{todo[:name]} has been set to incomplete."
+  redirect "/list/#{list_id}"
+end
+
 # not_found do
 #   redirect '/lists'
 # end
