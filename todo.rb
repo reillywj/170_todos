@@ -13,16 +13,16 @@ configure do
 end
 
 helpers do
-  def todos_remaining(list)
+  def todos_remaining_count(list)
     list[:todos].reject { |todo| todo[:completed] }.size
   end
 
-  def total_todos(list)
+  def total_todos_count(list)
     list[:todos].size
   end
 
   def all_todos_completed?(list)
-    todos_remaining(list) == 0 && total_todos(list) > 0
+    todos_remaining_count(list) == 0 && total_todos_count(list) > 0
   end
 
   def list_class(list)
