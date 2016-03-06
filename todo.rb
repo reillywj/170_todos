@@ -12,6 +12,20 @@ configure do
   set :session_secret, 'secret'
 end
 
+helpers do
+  def todos_remaining(list)
+    list[:todos].reject { |todo| todo[:completed] }.size
+  end
+
+  def total_todos(list)
+    list[:todos].size
+  end
+
+  def all_todos_completed?(list)
+    todos_remaining(list) == 0
+  end
+end
+
 before do
   session[:lists] ||= []
   @lists = session[:lists]

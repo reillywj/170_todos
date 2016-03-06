@@ -2,15 +2,21 @@
   <a href="/lists" title="View all lists" class="list">All Lists</a>
 <% end %>
 
-<section id='todos'>
+<% if all_todos_completed?(@list) %>
+  <section id="todos" class="complete">
+<% else %>
+  <section id="todos">
+<% end %>
   <header>
     <h2><%= @list[:name] %></h2>
     <ul>
-      <li>
-        <form action="/list/<%= @list_id %>/complete_all" method="post">
-          <button class="check" type="submit">Complete All</button>
-        </form>
-      </li>
+      <% unless all_todos_completed?(@list) %>
+        <li>
+          <form action="/list/<%= @list_id %>/complete_all" method="post">
+            <button class="check" type="submit">Complete All</button>
+          </form>
+        </li>
+      <% end %>
 
       <li>
         <a href="/list/<%= @list_id %>/edit" class="edit" title='edit list'></a>
@@ -23,7 +29,11 @@
   <% else %>
     <ul>
       <% @list[:todos].each_with_index do |todo, index| %>
-        <li class="<%= "complete" if todo[:completed] %>">
+        <% if todo[:completed] %>
+          <li class="complete">
+        <% else %>
+          <li>
+        <% end %>
             <form action="/list/<%= @list_id%>/todo/<%= index %>" method="post" class="check">
               <input type="hidden" name="completed" value="<%= !todo[:completed]%>"/>
               <button type="submit">Complete</button>
