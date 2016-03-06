@@ -38,15 +38,41 @@ helpers do
   end
 
   def sort_lists(lists, &some_block)
-    temp_lists = lists.map.with_index { |list, index| [list, index] }
-    temp_lists.sort_by! { |list| all_todos_completed?(list[0]) ? 1 : 0 }
-    temp_lists.each { |item| yield(item[0], item[1]) }
+    sorting_block = Proc.new { |index, item| yield item, index }
+    
+    incomplete_lists = {}
+    complete_lists = {}
+
+    lists.each_with_index do |list, index|
+      if all_todos_completed? list
+        complete_lists[index] = list
+      else
+        incomplete_lists[index] = list
+      end
+    end
+
+    incomplete_lists.each &sorting_block
+
+    complete_lists.each &sorting_block
   end
 
   def sort_todos(list, &some_block)
-    temp_todos = list[:todos].map.with_index { |todo, index| [todo, index] }
-    temp_todos.sort_by! { |todo| todo[0][:completed] ? 1 : 0}
-    temp_todos.each { |todo| yield(todo[0], todo[1])}
+    sorting_block = Proc.new { |index, item| yield item, index }
+
+    incomplete_todos = {}
+    complete_todos = {}
+
+    list[:todos].each_with_index do |todo, index|
+      if todo[:completed]
+        complete_todos[index] = todo
+      else
+        incomplete_todos[index] = todo
+      end
+    end
+
+    incomplete_todos.each &sorting_block
+
+    complete_todos.each &sorting_block
   end
 end
 
