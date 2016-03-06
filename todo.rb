@@ -165,6 +165,15 @@ post '/list/:list_id/todo/:todo_id' do
   redirect "/list/#{list_id}"
 end
 
+post '/list/:list_id/complete_all' do
+  list_id = params[:list_id].to_i
+  session[:lists][list_id][:todos].each do |todo|
+    todo[:completed] = true
+  end
+  session[:success] = "All todos were marked completed."
+  redirect "/list/#{list_id}"
+end
+
 # not_found do
 #   redirect '/lists'
 # end

@@ -7,6 +7,12 @@
     <h2><%= @list[:name] %></h2>
     <ul>
       <li>
+        <form action="/list/<%= @list_id %>/complete_all" method="post">
+          <button class="check" type="submit">Complete All</button>
+        </form>
+      </li>
+
+      <li>
         <a href="/list/<%= @list_id %>/edit" class="edit" title='edit list'></a>
       </li>
     </ul>
