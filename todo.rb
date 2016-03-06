@@ -38,37 +38,19 @@ helpers do
   end
 
   def sort_lists(lists, &some_block)
-    incomplete_lists = {}
-    complete_lists = {}
+    block_for_view = Proc.new { |item| yield item, lists.index(item) }
+    complete_lists, incomplete_lists = lists.partition { |list| all_todos_completed? list }
 
-    lists.each_with_index do |list, index|
-      if all_todos_completed? list
-        complete_lists[list] = index
-      else
-        incomplete_lists[list] = index
-      end
-    end
-
-    incomplete_lists.each &some_block
-
-    complete_lists.each &some_block
+    incomplete_lists.each &block_for_view
+    complete_lists.each &block_for_view
   end
 
-  def sort_todos(list, &some_block)
-    incomplete_todos = {}
-    complete_todos = {}
+  def sort_todos(todos, &some_block)
+    block_for_view = Proc.new { |item| yield item, todos.index(item) }
+    complete_todos, incomplete_todos = todos.partition { |todo| todo[:completed] }
 
-    list[:todos].each_with_index do |todo, index|
-      if todo[:completed]
-        complete_todos[todo] = index
-      else
-        incomplete_todos[todo] = index
-      end
-    end
-
-    incomplete_todos.each &some_block
-
-    complete_todos.each &some_block
+    incomplete_todos.each &block_for_view
+    complete_todos.each &block_for_view
   end
 end
 
