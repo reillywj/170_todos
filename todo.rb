@@ -141,6 +141,15 @@ post '/list/:id/delete' do
   redirect '/lists'
 end
 
+# Delete a todo from a list
+post '/list/:list_id/todo/:todo_id/delete' do
+  list_id = params[:list_id].to_i
+  todo_id = params[:todo_id].to_i
+  session[:lists][list_id][:todos].delete_at todo_id
+  session[:success] = "The todo item has been deleted."
+  redirect "/list/#{list_id}"
+end
+
 # not_found do
 #   redirect '/lists'
 # end
