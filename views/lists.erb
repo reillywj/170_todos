@@ -1,13 +1,9 @@
 <% if @lists.empty? %>
-  <div class="no_list">You have no lists yet.</div>
+  <section class="no_list">You have no lists yet.</div>
 <% else %>
   <ul id="lists">
     <% @lists.each_with_index do |list, index| %>
-      <% if all_todos_completed?(list)%>
-        <li class="complete">
-      <% else %>
-        <li>
-      <% end %>
+      <li class="<%= list_class(list) %>">
         <a href="/list/<%= index %>">
           <h2><%= list[:name] %></h2><p><%= todos_remaining(list) %>/<%= total_todos(list) %></p>
         </a>

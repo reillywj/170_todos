@@ -22,7 +22,15 @@ helpers do
   end
 
   def all_todos_completed?(list)
-    todos_remaining(list) == 0
+    todos_remaining(list) == 0 && total_todos(list) > 0
+  end
+
+  def list_class(list)
+    "complete" if all_todos_completed?(list)
+  end
+
+  def todo_class(todo)
+    "complete" if todo[:completed]
   end
 end
 
