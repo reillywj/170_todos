@@ -24,7 +24,7 @@
     <section class="no_list">You have nothing to do yet.</section>
   <% else %>
     <ul>
-      <% @list[:todos].each_with_index do |todo, index| %>
+      <% sort_todos(@list) do |todo, index| %>
         <li class="<%= todo_class(todo) %>">
           <form action="<%= list_path(@list_id)%>/todo/<%= index %>" method="post" class="check">
             <input type="hidden" name="completed" value="<%= !todo[:completed]%>"/>

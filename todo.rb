@@ -36,6 +36,18 @@ helpers do
   def list_path(list_id)
     "/list/#{list_id}"
   end
+
+  def sort_lists(lists, &some_block)
+    temp_lists = lists.map.with_index { |list, index| [list, index] }
+    temp_lists.sort_by! { |list| all_todos_completed?(list[0]) ? 1 : 0 }
+    temp_lists.each { |item| yield(item[0], item[1]) }
+  end
+
+  def sort_todos(list, &some_block)
+    temp_todos = list[:todos].map.with_index { |todo, index| [todo, index] }
+    temp_todos.sort_by! { |todo| todo[0][:completed] ? 1 : 0}
+    temp_todos.each { |todo| yield(todo[0], todo[1])}
+  end
 end
 
 before do
