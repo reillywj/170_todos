@@ -8,6 +8,7 @@ configure do
   # give 'secret'
   # Otherwise Sinatra resets this value every time
   set :session_secret, 'secret'
+  set :erb, :escape_html => true
 end
 
 helpers do
@@ -57,6 +58,52 @@ before do
   @lists = session[:lists]
 end
 
+# Loads a list and redirects if not found
+def load_list(index)
+  list = session[:lists][index] if index
+  return list if list
+
+  session[:error] = "The specified list was not found."
+  redirect "/lists"
+  halt
+end
+
+# common list setup
+def list_setup
+  @list_id = params[:list_id].to_i
+  @list = load_list @list_id
+end
+
+# Returns an error message if the name is invalid.
+def list_validation_error(name)
+  if !(1..100).cover? name.size
+    'List name must be between 1 and 100.'
+  elsif session[:lists].any? { |list| list[:name] == name }
+    "'#{name}' already exists."
+  end
+end
+
+# Validate new todo to a list; returns a message if validation error
+def todo_validation_error(input_todo, list)
+  if !(1..50).cover? input_todo.size
+    'Todo must be between 1 and 50 characters'
+  elsif list[:todos].any? { |todo| todo[:name] == input_todo }
+    "'#{input_todo}' already exists."
+  end
+end
+
+# Validate List name while editing
+def edit_list_name_validation(list_number, new_name)
+  other_lists = session[:lists].map.to_a
+  other_lists.delete_at list_number
+
+  if !(1..100).cover? new_name.size
+    "List name must be between 1 and 100."
+  elsif other_lists.any? { |list| list[:name] == new_name }
+    "'#{new_name}' already exists."
+  end 
+end
+
 # GET /lists        -> view all lists
 # GET /lists/new    -> new list form
 # POST /lists       -> create new list
@@ -72,15 +119,6 @@ end
 # Render for for new list
 get '/lists/new' do
   erb :new_list, layout: :layout
-end
-
-# Returns an error message if the name is invalid.
-def list_validation_error(name)
-  if !(1..100).cover? name.size
-    'List name must be between 1 and 100.'
-  elsif session[:lists].any? { |list| list[:name] == name }
-    "'#{name}' already exists."
-  end
 end
 
 # Posting a new list; redirect to '/lists'
@@ -101,8 +139,7 @@ end
 
 # Show single todo list
 get '/list/:list_id' do
-  @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  list_setup
   completed_todos = Proc.new { |todo| todo[:completed] }
 
   @completed_todos = @list[:todos].select &completed_todos
@@ -110,20 +147,10 @@ get '/list/:list_id' do
   erb :list, layout: :layout
 end
 
-# Validate new todo to a list; returns a message if validation error
-def todo_validation_error(input_todo, list)
-  if !(1..50).cover? input_todo.size
-    'Todo must be between 1 and 50 characters'
-  elsif list[:todos].any? { |todo| todo[:name] == input_todo }
-    "'#{input_todo}' already exists."
-  end
-end
-
 # Posting a new todo to list; redirect to '/list/:number'
 post '/list/:list_id/todos' do
   todo = params[:todo].strip
-  @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  list_setup
   error = todo_validation_error(todo, @list)
   if error
     session[:error] = error
@@ -137,28 +164,13 @@ end
 
 # Edit list name
 get '/list/:list_id/edit' do
-  @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  list_setup
   erb :edit_list, layout: :layout
-end
-
-def edit_list_name_validation(list_number, new_name)
-  other_lists = session[:lists].map.to_a
-  other_lists.delete_at list_number
-
-  if !(1..100).cover? new_name.size
-    "List name must be between 1 and 100."
-  elsif other_lists.any? { |list| list[:name] == new_name }
-    "'#{new_name}' already exists."
-  end
-    
 end
 
 # Update edit to list_name
 post '/list/:list_id' do
-  "#{params}\n#{session[:lists]}"
-  @list_id = params[:list_id].to_i
-  @list = session[:lists][@list_id]
+  list_setup
   list_name = params[:list_name].strip
 
   error = edit_list_name_validation(@list_id, list_name)
@@ -215,9 +227,9 @@ post '/list/:list_id/complete_all' do
   redirect "/list/#{list_id}"
 end
 
-# not_found do
-#   redirect '/lists'
-# end
+not_found do
+  redirect '/lists'
+end
 
 get '/' do
   redirect '/lists'
