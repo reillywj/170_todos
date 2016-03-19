@@ -1,7 +1,11 @@
-console.log("this is a test.");
-
 $(document).ready(function() {
-  $(".delete").submit(function() {
-    return confirm("Are you sure you wish to delete?");
+  $("form.delete").submit(function(event) {
+    // Stops the form from default behavior.
+    event.preventDefault();
+    event.stopPropagation();
+    var ok = confirm("Are you sure? This cannot be undone!");
+    if (ok) {
+      this.submit();
+    }
   });
 });
