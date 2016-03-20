@@ -193,8 +193,13 @@ end
 # Delete a todo list
 post '/list/:list_id/delete' do
   session[:lists].delete_at params[:list_id].to_i
-  session[:success] = "The list has been deleted."
-  redirect '/lists'
+
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    "/lists"
+  else
+    session[:success] = "The list has been deleted."
+    redirect '/lists'
+  end
 end
 
 # Delete a todo from a list
@@ -202,8 +207,13 @@ post '/list/:list_id/todo/:todo_id/delete' do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
   session[:lists][list_id][:todos].delete_at todo_id
-  session[:success] = "The todo item has been deleted."
-  redirect "/list/#{list_id}"
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    # ajax
+    status 204 # successful but no content
+  else
+    session[:success] = "The todo item has been deleted."
+    redirect "/list/#{list_id}"
+  end
 end
 
 # Toggle completed status of a todo
