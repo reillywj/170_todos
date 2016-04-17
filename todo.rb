@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/content_for'
 require 'sinatra/reloader' if development?
 require 'tilt/erubis'
+require 'pry'
 
 configure do
   enable :sessions
@@ -147,6 +148,14 @@ get '/list/:list_id' do
   erb :list, layout: :layout
 end
 
+def next_todo_id(todos)
+  # get list of todos
+  # find greatest id in todos
+  max = todos.map { |todo| todo[:id] }.max || 0
+  # increment
+  max + 1
+end
+
 # Posting a new todo to list; redirect to '/list/:number'
 post '/list/:list_id/todos' do
   todo = params[:todo].strip
@@ -156,7 +165,8 @@ post '/list/:list_id/todos' do
     session[:error] = error
     erb :list, layout: :layout
   else
-    @list[:todos] << {name: todo, completed: false}
+    id = next_todo_id(@list[:todos])
+    @list[:todos] << {id: id, name: todo, completed: false}
     session[:success] = 'Todo added successfully.'
     redirect "/list/#{@list_id}"
   end
@@ -206,7 +216,8 @@ end
 post '/list/:list_id/todo/:todo_id/delete' do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
-  session[:lists][list_id][:todos].delete_at todo_id
+  # session[:lists][list_id][:todos].delete_at todo_id
+  session[:lists][list_id][:todos].reject! { |todo| todo[:id] == todo_id }
   if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
     # ajax
     status 204 # successful but no content
@@ -220,7 +231,7 @@ end
 post '/list/:list_id/todo/:todo_id' do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
-  todo = session[:lists][list_id][:todos][todo_id]
+  todo = session[:lists][list_id][:todos].find { |todo| todo[:id] == todo_id }
   is_completed = params[:completed] == "true"
   todo[:completed] =  is_completed
   session[:success] = "#{todo[:name]} has been #{is_completed ? "checked" : "unchecked"}."
