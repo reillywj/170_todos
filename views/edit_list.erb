@@ -4,13 +4,13 @@
     <ul>
       <li>
 
-        <form class="delete"action="<%= list_path(@list_id)%>/delete" method='post'><button type='submit' class='delete'>Delete List</button></form>
+        <form class="delete"action="<%= list_path(@list)%>/delete" method='post'><button type='submit' class='delete'>Delete List</button></form>
       </li>
     </ul>
   </header>
 </section>
 
-<form action='/list/<%= @list_id%>' method='post'>
+<form action=<%= list_path(@list) %> method='post'>
   <dl>
     <dt>
       <label for='list_name'>Edit list name:</label>
@@ -21,6 +21,6 @@
   </dl>
   <fieldset class='actions'>
     <input type='submit' value='Save'>
-    <a href="/list/<%= @list_id%>">Cancel</a>
+    <a href="<%= list_path(@list) %>">Cancel</a>
   </fieldset>
 </form>

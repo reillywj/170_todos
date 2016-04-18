@@ -8,14 +8,14 @@
     <ul>
       <% unless all_todos_completed?(@list) %>
         <li>
-          <form action="<%= list_path(@list_id) %>/complete_all" method="post">
+          <form action="<%= list_path(@list) %>/complete_all" method="post">
             <button class="check" type="submit">Complete All</button>
           </form>
         </li>
       <% end %>
 
       <li>
-        <a href="<%= list_path(@list_id) %>/edit" class="edit" title='edit list'></a>
+        <a href="<%= list_path(@list) %>/edit" class="edit" title='edit list'></a>
       </li>
     </ul>
   </header>
@@ -26,12 +26,12 @@
     <ul>
       <% sort_todos(@list[:todos]) do |todo| %>
         <li class="<%= todo_class(todo) %>">
-          <form action="<%= list_path(@list_id)%>/todo/<%= todo[:id] %>" method="post" class="check">
+          <form action="<%= list_path(@list)%>/todo/<%= todo[:id] %>" method="post" class="check">
             <input type="hidden" name="completed" value="<%= !todo[:completed]%>"/>
             <button type="submit">Complete</button>
           </form>
           <h3><%= todo[:name] %></h3>
-          <form action='<%= list_path(@list_id)%>/todo/<%= todo[:id] %>/delete' method='post' class="delete">
+          <form action='<%= list_path(@list)%>/todo/<%= todo[:id] %>/delete' method='post' class="delete">
             <button type='submit'></button>
           </form>
         </li>
@@ -40,7 +40,7 @@
   <% end %>
 </section>
 
-<form action="<%= list_path(@list_id)%>/todos" method='post'>
+<form action="<%= list_path(@list)%>/todos" method='post'>
   <dl>
     <dt>
       <label for='todo'>Enter a new todo item:</label>
